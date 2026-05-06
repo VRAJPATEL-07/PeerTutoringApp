@@ -110,9 +110,9 @@ class _TutorMatchingScreenState extends State<TutorMatchingScreen> {
                     ),
                     items: [
                       const DropdownMenuItem<SkillLevel>(value: null, child: Text('Auto')),
-                      ...SkillLevel.values.map(
-                        (level) => DropdownMenuItem(value: level, child: Text(level.label)),
-                      ),
+                      const DropdownMenuItem<SkillLevel>(value: SkillLevel.beginner, child: Text('Beginner')),
+                      const DropdownMenuItem<SkillLevel>(value: SkillLevel.intermediate, child: Text('Intermediate')),
+                      const DropdownMenuItem<SkillLevel>(value: SkillLevel.advanced, child: Text('Advanced')),
                     ],
                     onChanged: (value) => setState(() => _selectedSkillLevel = value),
                   ),
@@ -143,7 +143,6 @@ class _TutorMatchingScreenState extends State<TutorMatchingScreen> {
                             title: Text(tutor.name),
                             subtitle: Text(
                               '${tutor.subjects.join(', ')}\n'
-                              'Skill: ${tutor.skillLevel.label} | '
                               'Available: ${tutor.availability.join(', ')}',
                             ),
                             isThreeLine: true,

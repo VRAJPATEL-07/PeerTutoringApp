@@ -21,6 +21,19 @@ class _UserProfileSetupScreenState extends State<UserProfileSetupScreen> {
 
   bool _didLoadInitial = false;
 
+  static const List<String> _demoSubjects = [
+    'Java',
+    'Flutter',
+    'Python',
+    'Data Structures',
+  ];
+
+  static const List<String> _demoAvailability = [
+    'Morning',
+    'Afternoon',
+    'Evening',
+  ];
+
   @override
   void dispose() {
     _nameController.dispose();
@@ -42,6 +55,43 @@ class _UserProfileSetupScreenState extends State<UserProfileSetupScreen> {
         ..addAll(user.availability);
     }
     _didLoadInitial = true;
+  }
+
+  void _applyDemoExample() {
+    setState(() {
+      _nameController.text = 'Demo Learner';
+      _role = UserRole.both;
+      _skillLevel = SkillLevel.intermediate;
+      _subjects
+        ..clear()
+        ..addAll(_demoSubjects);
+      _availability
+        ..clear()
+        ..addAll(_demoAvailability);
+    });
+  }
+
+  Future<void> _saveProfile(AppState appState) async {
+    if (!_formKey.currentState!.validate()) return;
+    if (_subjects.isEmpty) {
+      _showMessage('Select at least one subject');
+      return;
+    }
+    if (_availability.isEmpty) {
+      _showMessage('Select at least one availability slot');
+      return;
+    }
+
+    await appState.upsertCurrentUserProfile(
+      name: _nameController.text.trim(),
+      role: _role,
+      subjects: _subjects.toList(),
+      skillLevel: _skillLevel,
+      availability: _availability.toList(),
+    );
+
+    if (!mounted) return;
+    _showMessage('Profile saved successfully');
   }
 
   @override
@@ -165,28 +215,7 @@ class _UserProfileSetupScreenState extends State<UserProfileSetupScreen> {
               SizedBox(
                 width: double.infinity,
                 child: FilledButton(
-                  onPressed: () async {
-                    if (!_formKey.currentState!.validate()) return;
-                    if (_subjects.isEmpty) {
-                      _showMessage('Select at least one subject');
-                      return;
-                    }
-                    if (_availability.isEmpty) {
-                      _showMessage('Select at least one availability slot');
-                      return;
-                    }
-
-                    await appState.upsertCurrentUserProfile(
-                      name: _nameController.text.trim(),
-                      role: _role,
-                      subjects: _subjects.toList(),
-                      skillLevel: _skillLevel,
-                      availability: _availability.toList(),
-                    );
-
-                    if (!mounted) return;
-                    _showMessage('Profile saved successfully');
-                  },
+                  onPressed: () => _saveProfile(appState),
                   child: const Text('Save Profile'),
                 ),
               ),

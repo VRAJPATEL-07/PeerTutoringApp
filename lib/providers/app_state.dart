@@ -28,6 +28,7 @@ class AppState extends ChangeNotifier {
     'Flutter',
     'Python',
     'Data Structures',
+    'CLoud Computing',
   ];
 
   final List<String> availabilitySlots = const ['Morning', 'Afternoon', 'Evening'];
